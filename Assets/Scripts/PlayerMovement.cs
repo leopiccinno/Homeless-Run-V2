@@ -6,6 +6,9 @@ public class PlayerMovement : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 6f;
 
+    [Header("Rotation")]
+    public float rotationSpeed = 10f;
+
     [Header("Jump")]
     public float jumpForce = 7f;
 
@@ -35,11 +38,18 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector3 movement = new Vector3(
-            moveInput.x,
-            0f,
-            moveInput.y
-        );
+        Vector3 cameraForward = Camera.main.transform.forward;
+        Vector3 cameraRight = Camera.main.transform.right;
+
+        cameraForward.y = 0f;
+        cameraRight.y = 0f;
+
+        cameraForward.Normalize();
+        cameraRight.Normalize();
+
+        Vector3 movement =
+            cameraForward * moveInput.y +
+            cameraRight * moveInput.x;
 
         rb.linearVelocity = new Vector3(
             movement.x * moveSpeed,
@@ -47,9 +57,24 @@ public class PlayerMovement : MonoBehaviour
             movement.z * moveSpeed
         );
 
+        if (movement.sqrMagnitude > 0.01f)
+        {
+            Quaternion targetRotation =
+                Quaternion.LookRotation(movement);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.fixedDeltaTime
+            );
+        }
+
         if (jumpPressed && isGrounded)
         {
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            rb.AddForce(
+                Vector3.up * jumpForce,
+                ForceMode.Impulse
+            );
         }
 
         jumpPressed = false;
@@ -66,5 +91,18 @@ public class PlayerMovement : MonoBehaviour
         {
             jumpPressed = true;
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (groundCheck == null)
+            return;
+
+        Gizmos.color = Color.green;
+
+        Gizmos.DrawWireSphere(
+            groundCheck.position,
+            groundDistance
+        );
     }
 }
