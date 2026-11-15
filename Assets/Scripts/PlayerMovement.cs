@@ -21,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask groundLayer;
 
     private Rigidbody rb;
+    private Animator animator;
     private Vector2 moveInput;
     private bool jumpPressed;
     private bool isGrounded;
@@ -28,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -54,6 +56,14 @@ public class PlayerMovement : MonoBehaviour
             cameraForward * moveInput.y +
             cameraRight * moveInput.x;
 
+        if (animator != null)
+        {
+            animator.SetFloat(
+                "Speed",
+                movement.magnitude
+            );
+        }
+
         Vector3 targetVelocity = new Vector3(
             movement.x * moveSpeed,
             rb.linearVelocity.y,
@@ -78,7 +88,6 @@ public class PlayerMovement : MonoBehaviour
             );
         }
 
-        // Schneller fallen für besseres Jump'n'Run-Feeling
         if (rb.linearVelocity.y < 0)
         {
             rb.linearVelocity += Vector3.up *

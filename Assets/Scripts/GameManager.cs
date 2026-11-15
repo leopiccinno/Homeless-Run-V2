@@ -1,5 +1,7 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private TMP_Text levelClearedText;
     [SerializeField] private TMP_Text youDiedText;
+    [SerializeField] private TMP_Text objectiveText;
 
     [Header("Portal")]
     [SerializeField] private GameObject portal;
@@ -37,13 +40,37 @@ public class GameManager : MonoBehaviour
     {
         collectedCoins = 0;
 
-        portal.SetActive(false);
+        if (portal != null)
+        {
+            portal.SetActive(false);
+        }
 
         if (levelClearedText != null)
+        {
             levelClearedText.gameObject.SetActive(false);
+        }
 
         if (youDiedText != null)
+        {
             youDiedText.gameObject.SetActive(false);
+        }
+
+        if (objectiveText != null)
+        {
+            if (PlayerPrefs.GetInt("IntroShown", 0) == 0)
+            {
+                objectiveText.gameObject.SetActive(true);
+
+                Invoke(nameof(HideObjectiveText), 4f);
+
+                PlayerPrefs.SetInt("IntroShown", 1);
+                PlayerPrefs.Save();
+            }
+            else
+            {
+                objectiveText.gameObject.SetActive(false);
+            }
+        }
 
         UpdateCoinUI();
     }
@@ -56,49 +83,50 @@ public class GameManager : MonoBehaviour
 
         if (collectedCoins >= targetCoins)
         {
-            portal.SetActive(true);
+            if (portal != null)
+            {
+                portal.SetActive(true);
+            }
 
             if (levelClearedText != null)
+            {
                 levelClearedText.gameObject.SetActive(true);
+            }
         }
     }
 
-    public void PlayerDied(GameObject player)
+    public void PlayerDied()
     {
-        collectedCoins = 0;
+        StartCoroutine(RestartLevel());
+    }
 
-        UpdateCoinUI();
-
-        if (portal != null)
-            portal.SetActive(false);
-
+    private IEnumerator RestartLevel()
+    {
         if (youDiedText != null)
         {
             youDiedText.gameObject.SetActive(true);
-
-            CancelInvoke(nameof(HideDeathText));
-            Invoke(nameof(HideDeathText), 2f);
         }
 
-        PlayerRespawn respawn =
-            player.GetComponent<PlayerRespawn>();
+        yield return new WaitForSeconds(2f);
 
-        if (respawn != null)
-            respawn.Respawn();
+        SceneManager.LoadScene(
+            SceneManager.GetActiveScene().buildIndex
+        );
     }
 
-    private void HideDeathText()
+    private void HideObjectiveText()
     {
-        if (youDiedText != null)
-            youDiedText.gameObject.SetActive(false);
+        if (objectiveText != null)
+        {
+            objectiveText.gameObject.SetActive(false);
+        }
     }
 
     private void UpdateCoinUI()
     {
         if (coinText != null)
         {
-            coinText.text =
-                $"{collectedCoins}/{targetCoins} Coins";
+            coinText.text = $"{collectedCoins}/{targetCoins} Coins";
         }
     }
 }
