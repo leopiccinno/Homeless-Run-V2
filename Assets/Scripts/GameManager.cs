@@ -7,12 +7,14 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    private static bool objectiveAlreadyShown = false;
+
     [Header("Coins")]
     [SerializeField] private int targetCoins = 3;
 
     [Header("UI")]
     [SerializeField] private TMP_Text coinText;
-    [SerializeField] private TMP_Text levelClearedText;
+    [SerializeField] private TMP_Text portalOpenedText;
     [SerializeField] private TMP_Text youDiedText;
     [SerializeField] private TMP_Text objectiveText;
 
@@ -45,9 +47,9 @@ public class GameManager : MonoBehaviour
             portal.SetActive(false);
         }
 
-        if (levelClearedText != null)
+        if (portalOpenedText != null)
         {
-            levelClearedText.gameObject.SetActive(false);
+            portalOpenedText.gameObject.SetActive(false);
         }
 
         if (youDiedText != null)
@@ -57,14 +59,13 @@ public class GameManager : MonoBehaviour
 
         if (objectiveText != null)
         {
-            if (PlayerPrefs.GetInt("IntroShown", 0) == 0)
+            if (!objectiveAlreadyShown)
             {
                 objectiveText.gameObject.SetActive(true);
 
                 Invoke(nameof(HideObjectiveText), 4f);
 
-                PlayerPrefs.SetInt("IntroShown", 1);
-                PlayerPrefs.Save();
+                objectiveAlreadyShown = true;
             }
             else
             {
@@ -88,9 +89,12 @@ public class GameManager : MonoBehaviour
                 portal.SetActive(true);
             }
 
-            if (levelClearedText != null)
+            if (portalOpenedText != null)
             {
-                levelClearedText.gameObject.SetActive(true);
+                portalOpenedText.gameObject.SetActive(true);
+
+                CancelInvoke(nameof(HidePortalOpenedText));
+                Invoke(nameof(HidePortalOpenedText), 3f);
             }
         }
     }
@@ -107,11 +111,19 @@ public class GameManager : MonoBehaviour
             youDiedText.gameObject.SetActive(true);
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         SceneManager.LoadScene(
             SceneManager.GetActiveScene().buildIndex
         );
+    }
+
+    private void HidePortalOpenedText()
+    {
+        if (portalOpenedText != null)
+        {
+            portalOpenedText.gameObject.SetActive(false);
+        }
     }
 
     private void HideObjectiveText()

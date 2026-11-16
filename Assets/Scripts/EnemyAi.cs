@@ -12,9 +12,9 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float rotationSpeed = 12f;
 
     [Header("Teleport")]
-    [SerializeField] private float teleportInterval = 4f;
-    [SerializeField] private float teleportHeight = 1.5f;
-    [SerializeField] private int candidatePlatforms = 4;
+    [SerializeField] private float teleportInterval = 5f;
+    [SerializeField] private float teleportHeight = 1f;
+    [SerializeField] private float minimumTeleportDistance = 15f;
 
     private Rigidbody rb;
     private Animator animator;
@@ -65,8 +65,7 @@ public class EnemyAI : MonoBehaviour
 
     private void MoveTowardsPlayer()
     {
-        Vector3 direction =
-            player.position - transform.position;
+        Vector3 direction = player.position - transform.position;
 
         direction.y = 0f;
 
@@ -107,36 +106,34 @@ public class EnemyAI : MonoBehaviour
 
     private void TeleportNearPlayer()
     {
-        List<Transform> sortedPlatforms =
+        List<Transform> validPlatforms =
             new List<Transform>();
 
         foreach (Transform platform in platformsParent)
         {
-            sortedPlatforms.Add(platform);
+            float distance =
+                Vector3.Distance(
+                    platform.position,
+                    player.position);
+
+            if (distance >= minimumTeleportDistance)
+            {
+                validPlatforms.Add(platform);
+            }
         }
 
-        sortedPlatforms.Sort((a, b) =>
-            Vector3.Distance(a.position, player.position)
-            .CompareTo(
-            Vector3.Distance(b.position, player.position)));
-
-        int availablePlatforms =
-            Mathf.Min(candidatePlatforms,
-            sortedPlatforms.Count);
-
-        if (availablePlatforms <= 1)
+        if (validPlatforms.Count == 0)
             return;
 
-        int randomIndex =
-            Random.Range(1, availablePlatforms);
-
-        Transform chosenPlatform =
-            sortedPlatforms[randomIndex];
+        Transform randomPlatform =
+            validPlatforms[
+                Random.Range(0, validPlatforms.Count)
+            ];
 
         rb.linearVelocity = Vector3.zero;
 
         transform.position =
-            chosenPlatform.position +
+            randomPlatform.position +
             Vector3.up * teleportHeight;
     }
 

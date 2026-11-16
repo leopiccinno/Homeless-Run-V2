@@ -2743,7 +2743,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -111.80005, y: -18.799988}
+  m_AnchoredPosition: {x: -301, y: -116}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &463191074
@@ -2766,7 +2766,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Enemy arrives in: 30'
+  m_text: 'Enemy arrives in: 20'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3720,7 +3720,7 @@ GameObject:
   - component: {fileID: 609358076}
   - component: {fileID: 609358075}
   m_Layer: 5
-  m_Name: LevelClearedText
+  m_Name: PortalOpenedText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3765,7 +3765,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: LEVEL CLEARED!
+  m_text: PORTAL OPENED!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -5819,7 +5819,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -500, y: 238}
+  m_AnchoredPosition: {x: -500, y: 256.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &853315943
@@ -7918,7 +7918,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1141930403
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10091,8 +10091,8 @@ Transform:
   m_GameObject: {fileID: 1555340939}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.8729549, z: 0}
-  m_LocalScale: {x: 0.6111201, y: 1.1427122, z: 0.6672227}
+  m_LocalPosition: {x: 0, y: 0.87295496, z: 0}
+  m_LocalScale: {x: 0.97302544, y: 1.8194264, z: 1.062352}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2054151600}
@@ -12102,7 +12102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   targetCoins: 3
   coinText: {fileID: 853315943}
-  levelClearedText: {fileID: 609358075}
+  portalOpenedText: {fileID: 609358075}
   youDiedText: {fileID: 1155336878}
   objectiveText: {fileID: 1141930404}
   portal: {fileID: 1960207844}
@@ -12485,7 +12485,7 @@ Transform:
   m_GameObject: {fileID: 1960207844}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 49.13, y: 27.34, z: 5.37}
+  m_LocalPosition: {x: 49.13, y: 30, z: 5.37}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -12668,7 +12668,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5002950399659172362, guid: ca4a1d7eb49753d408ec7996efa8c010, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5889526
+      value: -2.3
       objectReference: {fileID: 0}
     - target: {fileID: 5002950399659172362, guid: ca4a1d7eb49753d408ec7996efa8c010, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12712,7 +12712,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5631149132940130480, guid: ca4a1d7eb49753d408ec7996efa8c010, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6703474232831443770, guid: ca4a1d7eb49753d408ec7996efa8c010, type: 3}
       propertyPath: m_IsTrigger
@@ -12789,8 +12789,8 @@ MonoBehaviour:
   moveSpeed: 4
   rotationSpeed: 8
   teleportInterval: 3
-  teleportHeight: 1.5
-  candidatePlatforms: 4
+  teleportHeight: 3
+  minimumTeleportDistance: 20
 --- !u!114 &2054151602
 MonoBehaviour:
   m_ObjectHideFlags: 0
